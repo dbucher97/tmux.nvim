@@ -4,6 +4,7 @@ local log = require("tmux.log")
 local navigation = require("tmux.navigation")
 local resize = require("tmux.resize")
 local tmux = require("tmux.wrapper.tmux")
+local twm = require("tmux.wrapper.twm")
 
 local M = {
     move_left = navigation.to_left,
@@ -28,6 +29,9 @@ function M.setup(options, logging)
 
     log.debug("setup config")
     config.setup(options, logging)
+
+    log.debug("setup twm wrapper")
+    twm.setup()
 
     log.debug("setup copy")
     copy.setup()
