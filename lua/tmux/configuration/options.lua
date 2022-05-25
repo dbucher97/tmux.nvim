@@ -57,6 +57,14 @@ local M = {
 
         -- prevents unzoom tmux when navigating beyond vim border
         persist_zoom = false,
+
+        -- to activate add a dict
+        -- {
+        --  "h": "the h command",
+        --  "j": "the j command",
+        --  ...
+        -- }
+        tiling_window_manager = {}
     },
     resize = {
         -- enables default keybindings (A-hjkl) for normal mode
