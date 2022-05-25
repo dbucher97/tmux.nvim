@@ -4,6 +4,15 @@
 [![ci](https://github.com/aserowy/tmux.nvim/actions/workflows/ci.yaml/badge.svg)](https://github.com/aserowy/tmux.nvim/actions/workflows/ci.yaml)
 [![coverage](https://coveralls.io/repos/github/aserowy/tmux.nvim/badge.svg?branch=main)](https://coveralls.io/github/aserowy/tmux.nvim?branch=main)
 
+## fork
+
+I forked the repo from [aserowy/tmux.nvim](https://github.com/aserowy/tmux.nvim) in order to integrate it with global window managers. Whenever a tmux border is reached, try to move to the next windwo of the tiling window manager instead.
+For instance, I use [yabai](https://github.com/koekeishiya/yabai) and a simple shell command can be executed to change the windows.
+```
+yabai -m windwow --focus north|south|east|west
+```
+This variation of the plugin allows you to specify commands for your windwow manager as soon as the border is reached. Also make sure that your keybindings do not interfere with the tmux keybindings. The tmux keybinds are also adjusted for `yabai` in the following. I dont think it does integrate with cycle-navigation well. So this fork does not support cycle, although it is left in the code.
+
 ## features
 
 ### copy from nvim to nvim to tmux
@@ -140,15 +149,15 @@ To enable cycle-free navigation beyond nvim, add the following to your `~/.tmux.
 ```tmux
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 
-bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' { if -F '#{pane_at_left}' '' 'select-pane -L' }
-bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
-bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' { if -F '#{pane_at_top}' '' 'select-pane -U' }
-bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' { if -F '#{pane_at_right}' '' 'select-pane -R' }
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' { if -F '#{pane_at_left}' 'run-shell "yabai -m window --focus west || true"' 'select-pane -L' }
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' { if -F '#{pane_at_bottom}' 'run-shell "yabai -m window --focus south || true"' 'select-pane -D' }
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' { if -F '#{pane_at_top}' 'run-shell "yabai -m window --focus north || true"' 'select-pane -U' }
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' { if -F '#{pane_at_right}' 'run-shell "yabai -m window --focus east || true"' 'select-pane -R' }
 
-bind-key -T copy-mode-vi 'C-h' if -F '#{pane_at_left}' '' 'select-pane -L'
-bind-key -T copy-mode-vi 'C-j' if -F '#{pane_at_bottom}' '' 'select-pane -D'
-bind-key -T copy-mode-vi 'C-k' if -F '#{pane_at_top}' '' 'select-pane -U'
-bind-key -T copy-mode-vi 'C-l' if -F '#{pane_at_right}' '' 'select-pane -R'
+bind-key -T copy-mode-vi 'C-h' if -F '#{pane_at_left}' 'run-shell "yabai -m window --focus west || true"' 'select-pane -L'
+bind-key -T copy-mode-vi 'C-j' if -F '#{pane_at_bottom}' 'run-shell "yabai -m window --focus south || true"' 'select-pane -D'
+bind-key -T copy-mode-vi 'C-k' if -F '#{pane_at_top}' 'run-shell "yabai -m window --focus north || true"' 'select-pane -U'
+bind-key -T copy-mode-vi 'C-l' if -F '#{pane_at_right}' 'run-shell "yabai -m window --focus east || true"' 'select-pane -R'
 ```
 
 Otherwise you can add:
