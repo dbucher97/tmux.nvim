@@ -5,7 +5,7 @@ local M = { twm_active = false }
 M.focus_window = function(direction)
   local cmd = options.navigation.tiling_window_manager[direction]
   if cmd ~= nil then
-    io.popen(cmd)
+    io.popen(cmd .. " 2> /dev/null")
   end
 end
 
